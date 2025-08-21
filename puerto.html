@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación Backend - Sistema de Etiquetas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --light-color: #f3f4f6;
+            --dark-color: #1f2937;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 25px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .section h2 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .section h2 i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .status-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .status-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .status-unknown {
+            background-color: #fef3c7;
+            color: var(--warning-color);
+        }
+        
+        .status-success {
+            background-color: #d1fae5;
+            color: var(--success-color);
+        }
+        
+        .status-error {
+            background-color: #fee2e2;
+            color: var(--error-color);
+        }
+        
+        .status-info {
+            flex-grow: 1;
+        }
+        
+        .status-info h3 {
+            margin-bottom: 5px;
+        }
+        
+        .status-info p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-test {
+            background-color: var(--accent-color);
+        }
+        
+        .endpoint-list {
+            list-style-type: none;
+        }
+        
+        .endpoint-list li {
+            padding: 12px 15px;
+            background-color: white;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .endpoint-list li i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #1f2937;
+            color: white;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .instructions {
+            background-color: #fef3c7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .instructions h3 {
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .instructions h3 i {
+            margin-right: 10px;
+            color: var(--warning-color);
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .code {
+            background-color: #1f2937;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-server"></i> Verificación Backend</h1>
+            <p>Herramienta de diagnóstico para el sistema de etiquetas electrónicas</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-plug"></i> Conexión con el Backend</h2>
+                
+                <div class="status-container">
+                    <div class="status-icon status-unknown">
+                        <i class="fas fa-question"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Estado del Backend</h3>
+                        <p>No se ha verificado la conexión con el backend</p>
+                    </div>
+                    <button class="btn btn-test" id="testConnection">
+                        <i class="fas fa-bolt"></i> Probar Conexión
+                    </button>
+                </div>
+                
+                <div class="result-box" id="connectionResult">
+                    {/* Los resultados de la prueba aparecerán aquí */}
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-list-check"></i> Endpoints Requeridos</h2>
+                
+                <ul class="endpoint-list">
+                    <li>
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span><strong>POST /api/auth/login</strong> - Autenticación de usuarios</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-user-plus"></i>
+                        <span><strong>POST /api/auth/register</strong> - Registro de usuarios</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-key"></i>
+                        <span><strong>GET /api/auth/verify</strong> - Verificación de token</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-tags"></i>
+                        <span><strong>GET /api/tags</strong> - Obtener listado de etiquetas</span>
+                    </li>
+                </ul>
+                
+                <button class="btn" id="testEndpoints">
+                    <i class="fas fa-vial"></i> Probar Endpoints
+                </button>
+                
+                <div class="result-box" id="endpointsResult">
+                    {/* Los resultados de la prueba aparecerán aquí */}
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> Instrucciones para ejecutar el backend</h3>
+                <ol>
+                    <li>Abre una terminal y navega hasta la carpeta de tu backend: <span class="code">cd mi-proyecto-backend</span></li>
+                    <li>Asegúrate de tener Node.js instalado (versión 14 o superior)</li>
+                    <li>Instala las dependencias: <span class="code">npm install</span></li>
+                    <li>Inicia el servidor: <span class="code">npm start</span> o <span class="code">node server.js</span></li>
+                    <li>El backend debería estar ejecutándose en: <span class="code">http://localhost:3001</span></li>
+                    <li>Si el puerto 3001 está en uso, puedes cambiarlo en el archivo de configuración del backend</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Etiquetas Electrónicas © 2023 - Herramienta de Diagnóstico</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testConnectionBtn = document.getElementById('testConnection');
+            const testEndpointsBtn = document.getElementById('testEndpoints');
+            const connectionResult = document.getElementById('connectionResult');
+            const endpointsResult = document.getElementById('endpointsResult');
+            const statusIcon = document.querySelector('.status-icon');
+            const statusInfo = document.querySelector('.status-info');
+            
+            // URL base del backend - modifica según sea necesario
+            const API_BASE_URL = 'http://localhost:3001';
+            
+            // Función para probar la conexión con el backend
+            testConnectionBtn.addEventListener('click', async function() {
+                testConnectionBtn.disabled = true;
+                testConnectionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Probando...';
+                
+                connectionResult.style.display = 'block';
+                connectionResult.textContent = 'Probando conexión con el backend...';
+                
+                try {
+                    // Intentamos hacer una petición a la raíz del backend
+                    const response = await fetch(`${API_BASE_URL}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        // Conexión exitosa
+                        const data = await response.json();
+                        
+                        statusIcon.className = 'status-icon status-success';
+                        statusIcon.innerHTML = '<i class="fas fa-check"></i>';
+                        
+                        statusInfo.innerHTML = `
+                            <h3>Backend Conectado</h3>
+                            <p>El backend está respondiendo correctamente en el puerto 3001</p>
+                        `;
+                        
+                        connectionResult.textContent = JSON.stringify(data, null, 2);
+                    } else {
+                        throw new Error(`Error HTTP: ${response.status}`);
+                    }
+                } catch (error) {
+                    // Error de conexión
+                    statusIcon.className = 'status-icon status-error';
+                    statusIcon.innerHTML = '<i class="fas fa-times"></i>';
+                    
+                    statusInfo.innerHTML = `
+                        <h3>Error de Conexión</h3>
+                        <p>No se pudo conectar con el backend en ${API_BASE_URL}</p>
+                    `;
+                    
+                    connectionResult.textContent = `Error: ${error.message}\n\nAsegúrate de que:\n1. El backend esté ejecutándose\n2. El puerto 3001 esté disponible\n3. No haya errores en la consola del backend`;
+                }
+                
+                testConnectionBtn.disabled = false;
+                testConnectionBtn.innerHTML = '<i class="fas fa-bolt"></i> Probar Conexión';
+            });
+            
+            // Función para probar endpoints específicos
+            testEndpointsBtn.addEventListener('click', async function() {
+                testEndpointsBtn.disabled = true;
+                testEndpointsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Probando...';
+                
+                endpointsResult.style.display = 'block';
+                endpointsResult.textContent = 'Probando endpoints...\n\n';
+                
+                try {
+                    // Probamos el endpoint de login
+                    endpointsResult.textContent += 'Probando /api/auth/login...\n';
+                    const loginResponse = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: 'test@example.com',
+                            password: 'password123'
+                        })
+                    });
+                    
+                    if (loginResponse.status === 404) {
+                        endpointsResult.textContent += '❌ Endpoint /api/auth/login no encontrado (404)\n';
+                    } else if (loginResponse.status === 401) {
+                        endpointsResult.textContent += '✅ Endpoint /api/auth/login existe (credenciales inválidas)\n';
+                    } else {
+                        endpointsResult.textContent += `✅ Endpoint /api/auth/login responde con código: ${loginResponse.status}\n`;
+                    }
+                    
+                    // Probamos el endpoint de tags
+                    endpointsResult.textContent += '\nProbando /api/tags...\n';
+                    const tagsResponse = await fetch(`${API_BASE_URL}/api/tags`);
+                    
+                    if (tagsResponse.status === 404) {
+                        endpointsResult.textContent += '❌ Endpoint /api/tags no encontrado (404)\n';
+                    } else {
+                        endpointsResult.textContent += `✅ Endpoint /api/tags responde con código: ${tagsResponse.status}\n`;
+                    }
+                    
+                    endpointsResult.textContent += '\nPrueba completada. Revisa los resultados arriba.';
+                    
+                } catch (error) {
+                    endpointsResult.textContent += `\n❌ Error al probar endpoints: ${error.message}`;
+                }
+                
+                testEndpointsBtn.disabled = false;
+                testEndpointsBtn.innerHTML = '<i class="fas fa-vial"></i> Probar Endpoints';
+            });
+        });
+    </script>
+</body>
+</html>
