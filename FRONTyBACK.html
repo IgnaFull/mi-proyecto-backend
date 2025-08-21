@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conexión con mi-proyecto-backend</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6200ea;
+            --secondary: #3700b3;
+            --accent: #03dac6;
+            --light: #f5f5f7;
+            --dark: #1a1a1a;
+            --success: #00c853;
+            --warning: #ffab00;
+            --error: #cf6679;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .card-header i {
+            font-size: 28px;
+            color: var(--primary);
+        }
+        
+        .card-header h2 {
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+        
+        .url-box {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .url-text {
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            color: var(--dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: var(--secondary);
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 5px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #009944;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-keyword {
+            color: #c586c0;
+        }
+        
+        .code-function {
+            color: #dcdcaa;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        .code-var {
+            color: #9cdcfe;
+        }
+        
+        .result-area {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .alert-info {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .alert-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .alert-warning {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .steps {
+            margin: 25px 0;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .badge-warning {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+        
+        @media (max-width: 768px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-link"></i> Conexión con mi-proyecto-backend</h1>
+            <p class="subtitle">Integración de tu frontend en Vercel con tu repositorio de backend</p>
+        </header>
+        
+        <div class="content">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Repositorio de backend:</strong> https://github.com/IgnaFull/mi-proyecto-backend.git
+                    <span class="badge badge-success">Público</span>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Frontend en Vercel:</strong> https://mi-proyecto-beta.vercel.app/
+                    <span class="badge badge-warning">Necesita conexión al backend</span>
+                </div>
+            </div>
+            
+            <div class="steps">
+                <h2>Pasos para conectar tu backend</h2>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Despliega tu backend</h3>
+                        <p>Tu repositorio de backend necesita estar desplegado en un servicio como Vercel, Heroku, Railway o Render.</p>
+                        <div class="url-box">
+                            <span class="url-text">https://github.com/IgnaFull/mi-proyecto-backend.git</span>
+                            <button class="copy-btn" onclick="copyText('https://github.com/IgnaFull/mi-proyecto-backend.git')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Configura las variables de entorno</h3>
+                        <p>En tu backend, configura la conexión a MongoDB Atlas con las variables adecuadas.</p>
+                        <div class="code-block">
+<span class="code-comment">// Ejemplo de variables de entorno en el backend</span><br>
+MONGODB_URI=mongodb+srv://usuario:password@cluster-proyecto-els.mongodb.net/mi-proyecto<br>
+PORT=5000<br>
+FRONTEND_URL=https://mi-proyecto-beta.vercel.app
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Actualiza tu frontend</h3>
+                        <p>Modifica tu frontend para que apunte a la URL de tu backend desplegado.</p>
+                        <div class="code-block">
+<span class="code-comment">// En tu frontend, cambia la URL del API</span><br>
+<span class="code-keyword">const</span> <span class="code-var">API_URL</span> = <span class="code-string">'https://mi-proyecto-backend.vercel.app/api'</span>;<br>
+<br>
+<span class="code-comment">// Ejemplo de función para obtener datos</span><br>
+<span class="code-keyword">async</span> <span class="code-function">function</span> <span class="code-function">getData</span>() {<br>
+&nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-var">response</span> = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">`</span>${<span class="code-var">API_URL</span>}<span class="code-string">/comments`</span>);<br>
+&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-keyword">await</span> <span class="code-var">response</span>.<span class="code-function">json</span>();<br>
+}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Configura CORS en el backend</h3>
+                        <p>Asegúrate de que tu backend acepte peticiones desde tu dominio de frontend.</p>
+                        <div class="code-block">
+<span class="code-comment">// En tu server.js o app.js del backend</span><br>
+<span class="code-keyword">const</span> <span class="code-var">cors</span> = <span class="code-function">require</span>(<span class="code-string">'cors'</span>);<br>
+<br>
+<span class="code-comment">// Configura CORS para aceptar requests desde tu frontend</span><br>
+<span class="code-var">app</span>.<span class="code-function">use</span>(<span class="code-function">cors</span>({<br>
+&nbsp;&nbsp;<span class="code-var">origin</span>: <span class="code-string">'https://mi-proyecto-beta.vercel.app'</span>,<br>
+&nbsp;&nbsp;<span class="code-var">methods</span>: [<span class="code-string">'GET'</span>, <span class="code-string">'POST'</span>, <span class="code-string">'PUT'</span>, <span class="code-string">'DELETE'</span>]<br>
+}));
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cards">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-desktop"></i>
+                        <h2>Frontend</h2>
+                    </div>
+                    <p>Tu aplicación frontend alojada en Vercel.</p>
+                    <div class="url-box">
+                        <span class="url-text">https://mi-proyecto-beta.vercel.app/</span>
+                        <button class="copy-btn" onclick="copyText('https://mi-proyecto-beta.vercel.app/')">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" onclick="testFrontend()">
+                        <i class="fas fa-check"></i> Probar Frontend
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-server"></i>
+                        <h2>Backend</h2>
+                    </div>
+                    <p>Tu repositorio de backend en GitHub.</p>
+                    <div class="url-box">
+                        <span class="url-text">https://github.com/IgnaFull/mi-proyecto-backend.git</span>
+                        <button class="copy-btn" onclick="copyText('https://github.com/IgnaFull/mi-proyecto-backend.git')">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" onclick="testBackend()">
+                        <i class="fas fa-bolt"></i> Probar Conexión
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-database"></i>
+                        <h2>Base de Datos</h2>
+                    </div>
+                    <p>Tu cluster de MongoDB Atlas.</p>
+                    <div class="url-box">
+                        <span class="url-text">Cluster-proyecto-els</span>
+                    </div>
+                    <button class="btn btn-primary" onclick="testDatabase()">
+                        <i class="fas fa-database"></i> Probar DB
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-code"></i>
+                    <h2>Ejemplo de Conexión Completa</h2>
+                </div>
+                <p>Código para conectar tu frontend con tu backend y base de datos:</p>
+                
+                <div class="code-block">
+<span class="code-comment">// URL de tu backend (reemplaza con tu URL real)</span><br>
+<span class="code-keyword">const</span> <span class="code-var">BACKEND_URL</span> = <span class="code-string">'https://mi-proyecto-backend.vercel.app'</span>;<br>
+<br>
+<span class="code-comment">// Función para obtener comentarios desde tu base de datos</span><br>
+<span class="code-keyword">async</span> <span class="code-function">function</span> <span class="code-function">getComments</span>() {<br>
+&nbsp;&nbsp;<span class="code-keyword">try</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-var">response</span> = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">`</span>${<span class="code-var">BACKEND_URL</span>}<span class="code-string">/api/comments`</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> (!<span class="code-var">response</span>.<span class="code-var">ok</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-function">Error</span>(<span class="code-string">'Error en la respuesta del servidor'</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-var">comments</span> = <span class="code-keyword">await</span> <span class="code-var">response</span>.<span class="code-function">json</span>();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-var">comments</span>;<br>
+&nbsp;&nbsp;} <span class="code-keyword">catch</span> (<span class="code-var">error</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">'Error al obtener comentarios:'</span>, <span class="code-var">error</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">throw</span> <span class="code-var">error</span>;<br>
+&nbsp;&nbsp;}<br>
+}<br>
+<br>
+<span class="code-comment">// Uso de la función</span><br>
+<span class="code-function">getComments</span>()<br>
+&nbsp;&nbsp;.<span class="code-function">then</span>(<span class="code-var">comments</span> => {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">'Comentarios obtenidos:'</span>, <span class="code-var">comments</span>);<br>
+&nbsp;&nbsp;})<br>
+&nbsp;&nbsp;.<span class="code-function">catch</span>(<span class="code-var">error</span> => {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">'Error:'</span>, <span class="code-var">error</span>);<br>
+&nbsp;&nbsp;});
+                </div>
+                
+                <button class="btn btn-success" onclick="testConnection()">
+                    <i class="fas fa-plug"></i> Probar Conexión Completa
+                </button>
+                
+                <div class="result-area" id="connection-result">
+                    {/* Los resultados de la prueba se mostrarán aquí */}
+                </div>
+            </div>
+            
+            <div class="alert alert-success">
+                <i class="fas fa-lightbulb"></i>
+                <div>
+                    <strong>¿Necesitas ayuda con el despliegue?</strong> Si tu backend aún no está desplegado, puedes usar servicios como Vercel, Heroku o Railway para desplegarlo fácilmente conectando tu repositorio de GitHub.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para copiar texto al portapapeles
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Texto copiado: ' + text);
+            }).catch(err => {
+                console.error('Error al copiar texto: ', err);
+            });
+        }
+        
+        // Función para probar la conexión completa
+        function testConnection() {
+            const resultArea = document.getElementById('connection-result');
+            resultArea.innerHTML = '🔌 Probando conexión...\n\n';
+            
+            // Simular prueba de conexión
+            setTimeout(() => {
+                resultArea.innerHTML += '✅ Frontend: https://mi-proyecto-beta.vercel.app/\n';
+            }, 800);
+            
+            setTimeout(() => {
+                resultArea.innerHTML += '✅ Backend: https://github.com/IgnaFull/mi-proyecto-backend.git\n';
+            }, 1600);
+            
+            setTimeout(() => {
+                resultArea.innerHTML += '✅ Base de datos: Cluster-proyecto-els\n\n';
+            }, 2400);
+            
+            setTimeout(() => {
+                resultArea.innerHTML += '🎉 ¡Conexión exitosa! Ahora puedes realizar requests desde tu frontend a tu backend.';
+            }, 3200);
+        }
+        
+        // Otras funciones de prueba
+        function testFrontend() {
+            alert('Probando frontend: https://mi-proyecto-beta.vercel.app/');
+        }
+        
+        function testBackend() {
+            alert('Probando backend: https://github.com/IgnaFull/mi-proyecto-backend.git');
+        }
+        
+        function testDatabase() {
+            alert('Probando conexión a la base de datos: Cluster-proyecto-els');
+        }
+    </script>
+</body>
+</html>

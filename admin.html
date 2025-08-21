@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Mi Proyecto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f9c74f;
+            --gray: #6c757d;
+            --bg-light: #f5f7fb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .logo h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        .menu {
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--accent);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            color: var(--secondary);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .bg-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .bg-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .bg-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .bg-accent {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .stat-info h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-header h2 {
+            color: var(--secondary);
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: #e6f7f0;
+            color: #00a76f;
+        }
+        
+        .badge-warning {
+            background-color: #fff5e6;
+            color: #ff9500;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+        }
+        
+        .view {
+            background-color: var(--success);
+        }
+        
+        .edit {
+            background-color: var(--warning);
+        }
+        
+        .delete {
+            background-color: var(--accent);
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: #e6f7f0;
+            color: #00a76f;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #00a76f;
+        }
+        
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-keyword {
+            color: #c586c0;
+        }
+        
+        .code-function {
+            color: #dcdcaa;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-database"></i> Mi<span>Proyecto</span></h2>
+            </div>
+            <ul class="menu">
+                <li class="menu-item active"><i class="fas fa-home"></i> Dashboard</li>
+                <li class="menu-item"><i class="fas fa-table"></i> Collections</li>
+                <li class="menu-item"><i class="fas fa-search"></i> Query</li>
+                <li class="menu-item"><i class="fas fa-chart-bar"></i> Analytics</li>
+                <li class="menu-item"><i class="fas fa-cog"></i> Configuración</li>
+                <li class="menu-item"><i class="fas fa-plug"></i> Conexiones</li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Panel de Administración</h1>
+                <div>
+                    <button class="btn btn-primary"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                </div>
+            </div>
+            
+            <div class="connection-status">
+                <div class="status-dot"></div>
+                <span>Conectado a MongoDB Atlas - Cluster-proyecto-els</span>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>4,079</h3>
+                        <p>Documentos Totales</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-success">
+                        <i class="fas fa-table"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>5</h3>
+                        <p>Colecciones</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-warning">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>1.66 MB</h3>
+                        <p>Tamaño de Índices</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-accent">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>32 ms</h3>
+                        <p>Latencia Promedio</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collections Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-table"></i> Colecciones</h2>
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Nueva Colección</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Documentos</th>
+                            <th>Tamaño</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>comments</td>
+                            <td>4,079</td>
+                            <td>1.66 MB</td>
+                            <td><span class="badge badge-success">Activo</span></td>
+                            <td class="actions">
+                                <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                                <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                                <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>users</td>
+                            <td>1,243</td>
+                            <td>2.31 MB</td>
+                            <td><span class="badge badge-success">Activo</span></td>
+                            <td class="actions">
+                                <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                                <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                                <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>movies</td>
+                            <td>2,587</td>
+                            <td>5.42 MB</td>
+                            <td><span class="badge badge-success">Activo</span></td>
+                            <td class="actions">
+                                <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                                <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                                <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Query Example -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-search"></i> Consulta de Ejemplo</h2>
+                </div>
+                <p>Consulta los documentos de la colección "comments":</p>
+                <div class="code-block">
+                    <span class="code-comment">// Ejemplo de consulta a la base de datos</span><br>
+                    <span class="code-keyword">const</span> <span class="code-function">getComments</span> = async () => {<br>
+                    &nbsp;&nbsp;<span class="code-keyword">try</span> {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> response = await fetch(<span class="code-string">'https://mi-proyecto-backend.vercel.app/api/comments'</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> data = await response.json();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;console.log(data);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> data;<br>
+                    &nbsp;&nbsp;} <span class="code-keyword">catch</span> (error) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;console.error(<span class="code-string">'Error fetching comments:'</span>, error);<br>
+                    &nbsp;&nbsp;}<br>
+                    };
+                </div>
+                <button class="btn btn-primary"><i class="fas fa-bolt"></i> Ejecutar Consulta</button>
+            </div>
+            
+            <!-- Connection Info -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-plug"></i> Información de Conexión</h2>
+                </div>
+                <p><strong>Frontend:</strong> https://mi-proyecto-beta.vercel.app/</p>
+                <p><strong>Backend:</strong> https://github.com/IgnaFull/mi-proyecto-backend.git</p>
+                <p><strong>Base de datos:</strong> MongoDB Atlas - Cluster-proyecto-els</p>
+                <p><strong>Colección actual:</strong> sample_mflix.comments</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de funcionalidad
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simular carga de datos
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Simular ejecución de consulta
+            const runQueryBtn = document.querySelector('.btn-primary:last-child');
+            runQueryBtn.addEventListener('click', function() {
+                alert('Consulta ejecutada. Revisa la consola para ver los resultados.');
+                console.log('Simulando resultados de la consulta...');
+                console.log({
+                    _id: "5a9427648b0beebeb6957f67",
+                    name: "Mercedes Tyler",
+                    email: "mercedes_tyler@fakegmail.com",
+                    text: "Plus veritatis vero facilis quaerat fuga temporibus. Praesentium ex sed.",
+                    date: "2022-08-18T04:56:07.000Z"
+                });
+            });
+            
+            // Simular acciones de los botones
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.querySelector('i').className;
+                    if (action.includes('eye')) {
+                        alert('Función de visualización activada');
+                    } else if (action.includes('edit')) {
+                        alert('Función de edición activada');
+                    } else if (action.includes('trash')) {
+                        alert('Función de eliminación activada');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
