@@ -1,0 +1,6 @@
+{
+  "products": [
+    { "id": "1", "name": "LECHE 1L", "price": 1300, "promo": "10% hoy", "updatedAt": "2024-05-15T10:30:00Z" },
+    { "id": "2", "name": "PAN", "price": 800, "promo": "", "updatedAt": "2024-05-15T09:15:00Z" }
+  ]
+}
